@@ -15,9 +15,13 @@ exports.handler = async (event) => {
     
     const products = await stripe.products.list({
       limit: 3,
-    });
+      expand: ['data.default_price'],
+    },
+    );
     
+    const plan =  await stripe.plans.list({limit: 3});
     console.log('net2', products.data);
+    console.log('plan: ', plan);
     return {
       statusCode: 200,
       headers: {...CORS_HEADERS},

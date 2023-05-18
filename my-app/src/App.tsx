@@ -11,10 +11,10 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userResponse = await fetch('/.netlify/functions/get-products', {
+        const response = await fetch('/.netlify/functions/get-products', {
           method: "GET",
         });
-        const { products: { data } } = await userResponse.json();
+        const { products: { data } } = await response.json();
         setProductsArray(data);
         return data;
       } catch (error) {
