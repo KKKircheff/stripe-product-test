@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Product } from './types/product-types';
 import StripeProductCard from './components/stripe-product-card/Stripe-product-card.component'
-import './App.css';
+import './App.scss';
 
 function App() {
 

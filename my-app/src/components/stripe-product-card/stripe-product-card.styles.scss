@@ -2,12 +2,12 @@
     border: 1px solid rgb(123, 123, 123);
     margin: 10px;
     padding: 10px;
+    width: 80%;
+    margin: 20px auto;
 }
 
 .plan-cards-container {
-    display: flex;
-    flex:1;
-    flex-direction: row;
-    justify-content: space-around;
-    
+    display: grid;
+    gap: 1em;
+    grid-template-columns: repeat(auto-fit, minmax(10em, 25em));
 }
