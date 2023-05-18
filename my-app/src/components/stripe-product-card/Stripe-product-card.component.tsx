@@ -6,7 +6,7 @@ interface ProductProps {
   product: Product;
 }
 const StripeProductCard = ({product}:ProductProps) => {
-   console.log('Product:  ',product.default_price);
+   console.log('Product:  ',product);
 
      return (
         <div className='stripe-product-card-wrapper'>

@@ -14,9 +14,10 @@ function App() {
         const response = await fetch('/.netlify/functions/get-products', {
           method: "GET",
         });
-        const { products: { data } } = await response.json();
-        setProductsArray(data);
-        return data;
+        const {productsWithPlan} = await response.json();
+        console.log('-----',productsWithPlan[0].plan)
+        setProductsArray(productsWithPlan);
+        return productsWithPlan;
       } catch (error) {
         console.error("Failed to fetch user data:", error);
       }
@@ -31,7 +32,7 @@ function App() {
       <h1>Your products</h1>
       <h3>---------</h3>
       { productsArray[0] ?
-        <StripeProductCard product={productsArray[0]} />
+        productsArray.map((product)=><StripeProductCard key={product.id} product={product} />)
         :<h3>No products availble</h3>
         }
       <h3>---------</h3>

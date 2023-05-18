@@ -3,34 +3,35 @@ require('dotenv').config();
 const stripe = require('stripe')(process.env.REACT_APP_STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
-
   const CORS_HEADERS = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers':
       'Origin, X-Requested-With, Content-Type, Accept',
-  }
-  
+  };
+
   try {
-    console.log('net1');
-    
     const products = await stripe.products.list({
-      limit: 3,
       expand: ['data.default_price'],
-    },
-    );
-    
-    const plan =  await stripe.plans.list({limit: 3});
-    console.log('net2', products.data);
-    console.log('plan: ', plan);
+    });
+
+    const plans = await stripe.plans.list({ limit: 100 });
+
+
+    const productsWithPlan = products.data.map((product) => {
+      const data = plans.data.filter((plan)=>plan.product===product.id)
+      return {...product,...{plan:data}}
+    });
+
+
     return {
       statusCode: 200,
-      headers: {...CORS_HEADERS},
-      body: JSON.stringify({ products }),
+      headers: { ...CORS_HEADERS },
+      body: JSON.stringify({ productsWithPlan }),
     };
   } catch (error) {
     return {
       statusCode: 400,
-      headers: {...CORS_HEADERS},
+      headers: { ...CORS_HEADERS },
       body: JSON.stringify({ error }),
     };
   }

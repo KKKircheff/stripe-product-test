@@ -201,5 +201,5 @@ export interface Plan {
     unit_label?: string | null
     updated: number
     url?: string | null
-    plan?: Plan,
+    plan?: Plan[],
     }
