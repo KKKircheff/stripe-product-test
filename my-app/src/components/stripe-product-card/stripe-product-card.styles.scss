@@ -3,3 +3,11 @@
     margin: 10px;
     padding: 10px;
 }
+
+.plan-cards-container {
+    display: flex;
+    flex:1;
+    flex-direction: row;
+    justify-content: space-around;
+    
+}
