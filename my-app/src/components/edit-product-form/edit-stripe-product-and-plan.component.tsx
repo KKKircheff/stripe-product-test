@@ -1,17 +1,27 @@
-import React, { useState } from 'react'
-import { Product, Plan } from '../../types/product-types'
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { Plan, Product } from '../../types/product-types'
 
 interface Props {
-    product: Product;
-    isNewProduct: boolean;
+    currentProduct: Product;
+    isProductChanged: boolean;
+    createProductInStripe:(product:Product, plans:Plan[])=>void;
+    updateProductInStripe:(product:Product, plans:Plan[])=>void;
 }
 
-const EditProductForm = ({ product, isNewProduct }: Props) => {
-  
-    const plans = product.plan;
-    const [planValues, setPlanValues] = useState(plans![0]);
-    delete product.plan;
-    const [productValues, setProductValues] = useState(product);
+const EditProductForm = ({ currentProduct, isProductChanged, createProductInStripe, updateProductInStripe}: Props) => {
+
+    const plans = currentProduct.plan;
+    delete currentProduct.plan;
+    const [productValues, setProductValues] = useState<Product>();
+    const [planValues, setPlanValues] = useState<Plan>();
+
+    useEffect(() => {
+        setProductValues(currentProduct);
+        setPlanValues(plans![0]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isProductChanged])
+
 
     const handleInputProductChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -24,58 +34,83 @@ const EditProductForm = ({ product, isNewProduct }: Props) => {
     const handleInputPlanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setPlanValues({
-            ...planValues,
+            ...planValues!,
             [name]: value,
         });
     };
-    const handleInputSelectChange = (e:React.ChangeEvent<HTMLSelectElement>)=>{
-       
+
+    const handleInputSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setPlanValues({
+            ...planValues!,
+            [name]: value,
+        });
+    }
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+       if( productValues!.id==='new_product') { 
+         delete productValues?.id;
+         delete planValues?.id;
+         createProductInStripe (productValues!,[planValues!])
+       } else {
+         updateProductInStripe (productValues!,plans!)
+       }
     }
 
     return (
         <div className='edir-form-wrapper'>
-            <div>EditProductForm</div>
-            <form>
+
+            <h1>EditProductForm</h1>
+
+            {productValues && <form onSubmit={handleSubmit}>
                 <label>Product name:
                     <input
-                        value={productValues.name}
+                        required
+                        value={productValues!.name}
                         onChange={handleInputProductChange}
                         name="name" //IMPORTANT 
                     />
-                </label>
+                </label> <br />
+
                 <label>Product description:
                     <input
-                        value={productValues.description!}
+                        required
+                        value={productValues!.description!}
                         onChange={handleInputProductChange}
                         name="description" //IMPORTANT 
                     />
-                </label>
-
+                </label><br /><br />
 
                 <label>Plan Name:
                     <input
-                        value={planValues.nickname}
+                        required
+                        value={planValues!.nickname}
                         onChange={handleInputPlanChange}
                         name="nickname" //IMPORTANT 
-                        placeholder={planValues.nickname ? planValues.nickname : 'Plan name'}
                     />
                 </label>
-                <label>Price amount:
-                    <input
-                        value={planValues.amount}
-                        onChange={handleInputPlanChange}
-                        name="amount" //IMPORTANT 
-                    />
-                </label>
+
                 <label>Charge Interval:
-                    <select name="interval" onChange={handleInputSelectChange} value={planValues.interval}>
+                    <select name="interval" onChange={handleInputSelectChange} value={planValues!.interval}>
                         <option value="day">day</option>
                         <option value="week">week</option>
                         <option value="month">month</option>
                         <option value="year">year</option>
                     </select>
+                </label> <br />
+
+                <label>Price amount:
+                    <input
+                        required
+                        value={planValues!.amount}
+                        onChange={handleInputPlanChange}
+                        name="amount" //IMPORTANT 
+                    />
                 </label>
-            </form>
+                <button>Process Porduct</button>
+            </form>}
+            <br /> <br /> <br />
         </div>
     )
 }

@@ -5,14 +5,21 @@ import StripeProductCard from './components/stripe-product-card/Stripe-product-c
 import EditProductForm from './components/edit-product-form/edit-stripe-product-and-plan.component';
 import './App.scss';
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'Origin, X-Requested-With, Content-Type, Accept',
+}
+
 const INITIAL_PLAN:Plan = {
-  "active": true,
-  "amount": 0,
-  "currency": "eur",
-  "interval": "",
-  "interval_count": 1,
-  "nickname": "",
-  "product": "",
+  id: 'new_plan',
+  active: true,
+  amount: 0,
+  currency: "eur",
+  interval: "",
+  interval_count: 1,
+  nickname: " ",
+  product: "",
 }
 
 const INITIAL_PRODUCT:Product = {
@@ -27,18 +34,56 @@ function App() {
 
   const [productsArray, setProductsArray] = useState<Product[]>([INITIAL_PRODUCT]);
   const [currentProduct, setCurrentProduct] = useState(INITIAL_PRODUCT);
-  const [isNewProduct, setIsNewProduct] = useState(true);
+  const [isProductChanged, setIsProductChanged] = useState(true);
+  console.log('Render current product ',currentProduct);
 
   const resetProduct = () =>{
     setCurrentProduct(INITIAL_PRODUCT);
-    setIsNewProduct(true);
+    setIsProductChanged(!isProductChanged);
   }
 
-  const editProduct=(product:any)=>{
-    alert(`Edit Product ${product.id}`)
+  const editProduct=(product: Product)=>{
+    alert(`Edit / Create Product ${product.id}`)
+    setCurrentProduct(product);
+    setIsProductChanged(!isProductChanged);
   }
-  const deleteProduct=(product:any)=>{
+
+  const deleteProduct=(product:Product)=>{
     alert(`Delete Product ${product.id}`);
+  }
+
+  const createProductInStripe = (product: Product, plans:Plan[])=>{
+    const createProduct = async () => {
+      try {
+        const response = await fetch('/.netlify/functions/create-product', {
+          method: "POST",
+          headers: {...CORS_HEADERS, "Content-Type": "application/json" },
+          body: JSON.stringify({ product:product, plans:plans })
+        });
+        const { productObject } = await response.json();
+        console.log('Success:', productObject)
+      } catch (error) {
+        console.error("Failed to create Product:", error);
+      }
+    };
+    createProduct();
+  }
+
+  const updateProductInStripe = (product: Product, plans:Plan[])=>{
+    const updateProduct = async () => {
+      try {
+        const response = await fetch('/.netlify/functions/update-product', {
+          method: "PATCH",
+          headers: {...CORS_HEADERS, "Content-Type": "application/json" },
+          body: JSON.stringify({ product:product, plans:plans })
+        });
+        const { productObject } = await response.json();
+        console.log('Success:', productObject)
+      } catch (error) {
+        console.error("Failed to create Product:", error);
+      }
+    };
+    updateProduct();
   }
 
   useEffect(() => {
@@ -48,7 +93,6 @@ function App() {
           method: "GET",
         });
         const {productsWithPlan} = await response.json();
-        console.log('-----',productsWithPlan[0].plan)
         setProductsArray(productsWithPlan);
         return productsWithPlan;
       } catch (error) {
@@ -75,7 +119,12 @@ function App() {
       <h3>---------</h3>
       <h5>To reset and create new product & plan</h5>
       <button onClick={resetProduct}>Create</button>
-      <EditProductForm  product={currentProduct} isNewProduct={isNewProduct}/>
+      {currentProduct && <EditProductForm 
+       currentProduct={currentProduct}
+      isProductChanged={isProductChanged}
+      createProductInStripe = {createProductInStripe}
+      updateProductInStripe= {updateProductInStripe} 
+      />}
       <h3>---------</h3>
     </div>
   );

@@ -5,31 +5,30 @@ import StripePlanCard from '../stripe-plan-card/stripe-plan-card.component';
 
 interface ProductProps {
   product: Product;
-  editProduct: (product:Product)=>void;
-  deleteProduct: (product:Product)=>void;
+  editProduct: (product: Product) => void;
+  deleteProduct: (product: Product) => void;
 }
-const StripeProductCard = ({product, editProduct, deleteProduct}:ProductProps) => {
-   console.log('Product:  ',product);
+const StripeProductCard = ({ product, editProduct, deleteProduct }: ProductProps) => {
 
-   const handleEditClick = () =>{editProduct(product)}
-   const handleDelteClick = () =>{deleteProduct(product)}
+  const handleEditClick = () => { editProduct(product) }
+  const handleDelteClick = () => { deleteProduct(product) }
 
-     return (
-        <div className='stripe-product-card-wrapper'>
-          <h2>product subscription card</h2>
-          <h6>--------------------------</h6>
-          <p><strong>Product name: </strong> {product.name}</p>
-          <p><strong>Product description: </strong>{product.description}</p>
-         { product.created && <p><strong>Created: </strong>{product.created}</p>}
-         {product.active && <p><strong>Acrive: </strong>{product.active ? <span>Yes</span>:<span>No</span>}</p>}
-          <div className='plan-cards-container'>
-          {product.plan && product.plan.map((item)=><StripePlanCard key={item.id} item={item}/>)}
-          </div>
-        <button className='edit-stripe-product' onClick={handleEditClick}>Edit</button>
-        <button className='delete-stripe-product' onClick={handleDelteClick}>Delete</button>
-      </div>    
-    )    
-  }
+  return (
+    <div className='stripe-product-card-wrapper'>
+      <h2>product subscription card</h2>
+      <h6>--------------------------</h6>
+      <p><strong>Product name: </strong> {product.name}</p>
+      <p><strong>Product description: </strong>{product.description}</p>
+      {product.created && <p><strong>Created: </strong>{product.created}</p>}
+      {product.active && <p><strong>Acrive: </strong>{product.active ? <span>Yes</span> : <span>No</span>}</p>}
+      <div className='plan-cards-container'>
+        {product.plan && product.plan.map((item) => <StripePlanCard key={item.id} item={item} />)}
+      </div>
+      <button className='edit-stripe-product' onClick={handleEditClick}>Edit</button>
+      <button className='delete-stripe-product' onClick={handleDelteClick}>Delete</button>
+    </div>
+  )
+}
 
 export default StripeProductCard
 

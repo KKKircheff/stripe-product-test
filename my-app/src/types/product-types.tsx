@@ -62,7 +62,7 @@ export interface Plan {
     deactivate_on?: any[]
     default_price?: DefaultPrice | string
     description?: string | null
-    id: string
+    id?: string
     images?: (string)[]
     livemode?: boolean
     metadata?: { [key: string]: string }
