@@ -15,24 +15,29 @@ exports.handler = async (event) => {
       return {
         statusCode: 204,
         headers: { ...CORS_HEADERS },
-        body: JSON.stringify({}),
+        body: JSON.stringify({product,plans}),
       };
     }
 
-    const createdProduct = await stripe.products.create({ ...product })
-    .then((product)=>plans.map(async (plan) => {
-      const data = await stripe.plans.create({ ...plan, product: product.id });
-      console.log('single.plan:',data)
-      return data;
-    }));
+    const createdProduct = await stripe.products.create({ ...product });
 
-    console.log('Here it is!!!!!:', createdProduct);
+    const createdPlans = await Promise.all(
+      plans.map(async (plan) => {
+        const data = await stripe.plans.create({
+          ...plan,
+          product: createdProduct.id,
+        });
+        return data;
+      })
+    );
+
 
     return {
       statusCode: 200,
       headers: { ...CORS_HEADERS },
       body: JSON.stringify({
         product: createdProduct,
+        plans:createdPlans
       }),
     };
   } catch (error) {

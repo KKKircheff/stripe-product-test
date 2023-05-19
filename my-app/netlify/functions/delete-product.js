@@ -20,9 +20,9 @@ exports.handler = async (event) => {
       };
     }
 
-    const deletedPriceResponse = plan.map(
+    const deletedPriceResponse = await Promise.all (plan.map(
       async (item) => await stripe.plans.del(item.id)
-    );
+    ));
 
     const deletedProductResponse = await stripe.products.del(productId);
 
@@ -30,7 +30,7 @@ exports.handler = async (event) => {
       statusCode: 200,
       headers: { ...CORS_HEADERS },
       body: JSON.stringify({
-        message: `Sucessfuly deleted object id:`, product:deletedProductResponse, plans:deletedPriceResponse
+        message: `Sucessfuly deleted object id:`, deletedProductResponse, deletedPriceResponse
       }),
     };
   } catch (error) {

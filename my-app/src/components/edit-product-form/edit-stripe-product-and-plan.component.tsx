@@ -12,12 +12,14 @@ interface Props {
 const EditProductForm = ({ currentProduct, isProductChanged, createProductInStripe, updateProductInStripe}: Props) => {
 
     const plans = currentProduct.plan;
-    delete currentProduct.plan;
+    const {plan, ...product} = currentProduct;
     const [productValues, setProductValues] = useState<Product>();
     const [planValues, setPlanValues] = useState<Plan>();
 
+    console.log('AfterState:',productValues)
+
     useEffect(() => {
-        setProductValues(currentProduct);
+        setProductValues(product);
         setPlanValues(plans![0]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isProductChanged])
@@ -61,7 +63,7 @@ const EditProductForm = ({ currentProduct, isProductChanged, createProductInStri
     return (
         <div className='edir-form-wrapper'>
 
-            <h1>EditProductForm</h1>
+            <h2>Create / Edit Product Form</h2><br />
 
             {productValues && <form onSubmit={handleSubmit}>
                 <label>Product name:
@@ -107,10 +109,10 @@ const EditProductForm = ({ currentProduct, isProductChanged, createProductInStri
                         onChange={handleInputPlanChange}
                         name="amount" //IMPORTANT 
                     />
-                </label>
+                </label> <br /> <br />
                 <button>Process Porduct</button>
             </form>}
-            <br /> <br /> <br />
+            <br /> <br /> 
         </div>
     )
 }
