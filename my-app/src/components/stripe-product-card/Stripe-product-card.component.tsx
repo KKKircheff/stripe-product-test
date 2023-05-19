@@ -5,23 +5,28 @@ import StripePlanCard from '../stripe-plan-card/stripe-plan-card.component';
 
 interface ProductProps {
   product: Product;
+  editProduct: (product:Product)=>void;
+  deleteProduct: (product:Product)=>void;
 }
-const StripeProductCard = ({product}:ProductProps) => {
+const StripeProductCard = ({product, editProduct, deleteProduct}:ProductProps) => {
    console.log('Product:  ',product);
+
+   const handleEditClick = () =>{editProduct(product)}
+   const handleDelteClick = () =>{deleteProduct(product)}
 
      return (
         <div className='stripe-product-card-wrapper'>
-          <h4>product subscription card</h4>
-          <p>Product name: {product.name}</p>
-          <p>Product description: {product.description}</p>
-          <p>Price Object Id: {product.name}</p>
-          <p>Created: {product.created}</p>
-          <p>Active: {product.active ? <span>Yes</span>:<span>No</span>}</p>
+          <h2>product subscription card</h2>
+          <h6>--------------------------</h6>
+          <p><strong>Product name: </strong> {product.name}</p>
+          <p><strong>Product description: </strong>{product.description}</p>
+         { product.created && <p><strong>Created: </strong>{product.created}</p>}
+         {product.active && <p><strong>Acrive: </strong>{product.active ? <span>Yes</span>:<span>No</span>}</p>}
           <div className='plan-cards-container'>
           {product.plan && product.plan.map((item)=><StripePlanCard key={item.id} item={item}/>)}
           </div>
-        <button className='edit-stripe-product'>Edit</button>
-        <button className='delete-stripe-product'>Delete</button>
+        <button className='edit-stripe-product' onClick={handleEditClick}>Edit</button>
+        <button className='delete-stripe-product' onClick={handleDelteClick}>Delete</button>
       </div>    
     )    
   }

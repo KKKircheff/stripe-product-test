@@ -11,7 +11,7 @@ const StripePlanCard = ({item}:ProductProps) => {
     <div className='stripe-plan-card-wrapper'>
     <p>Plan name: {item.nickname}</p>
     <p>Plan interval: {item.interval}</p>
-    <p>Price: {item.amount}</p><span> {item.currency}</span>
+    <p>Price: {item.amount/100}<span> {item.currency}</span></p>
     <p></p>
     <p></p>
     </div>

@@ -58,23 +58,23 @@ export interface Plan {
     active?: boolean | null
     attributes?: (string)[] | null
     caption?: string | null
-    created: number
+    created?: number
     deactivate_on?: any[]
     default_price?: DefaultPrice | string
     description?: string | null
     id: string
-    images: (string)[]
-    livemode: boolean
-    metadata: { [key: string]: string }
-    name: string
-    object: "product"
+    images?: (string)[]
+    livemode?: boolean
+    metadata?: { [key: string]: string }
+    name?: string
+    object?: "product"
     package_dimensions?: PackageDimensions | null
     shippable?: boolean | null
     statement_descriptor?: string | null
     tax_code?: string | null
     type?: "good" | "service"
     unit_label?: string | null
-    updated: number
+    updated?: number
     url?: string | null
     plan?: Plan[],
     }
