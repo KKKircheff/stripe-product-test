@@ -48,9 +48,21 @@ function App() {
     setIsProductChanged(!isProductChanged);
   }
 
-  const deleteProduct=(product:Product)=>{
+  const deleteProduct= async (product:Product)=>{
     alert(`Delete Product ${product.id}`);
-  }
+      try {
+        const response = await fetch('/.netlify/functions/delete-product', {
+          method: "DELETE",
+          headers: {...CORS_HEADERS, "Content-Type": "application/json" },
+          body: JSON.stringify({productId:product.id, plan:product.plan})
+        });
+        const { message } = await response.json();
+        console.log('Success:', message)
+      } catch (error) {
+        console.error("Failed to create Product:", error);
+      }
+    };
+  
 
   const createProductInStripe = (product: Product, plans:Plan[])=>{
     const createProduct = async () => {
