@@ -50,11 +50,12 @@ const EditProductForm = ({ currentProduct, isProductChanged, createProductInStri
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
         e.preventDefault();
-       if( productValues!.id==='new_product') { 
-         delete productValues?.id;
-         delete planValues?.id;
-         createProductInStripe (productValues!,[planValues!])
+        if( productValues!.id==='new_product') { 
+            let {amount, ...rest} = planValues!; 
+            amount=amount*100; 
+            createProductInStripe (productValues!,[{...planValues!,amount}])
        } else {
          updateProductInStripe (productValues!,plans!)
        }

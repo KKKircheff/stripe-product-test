@@ -19,21 +19,23 @@ exports.handler = async (event) => {
       };
     }
 
+
     const updatedProduct = await stripe.products.update(product.id, {
       'name': product.name,
       'description': product.description,
     });
 
-    const updatedPlans = await Promise.all(
-      plans.map(async (plan) => {
-        const data = await stripe.plans.update(plan.id, {
-          'nickname': plan.nickname,
-          // 'interval': plan.interval,
-        });
-        return data;
-      })
-    );
-
+const updatedPlans = await Promise.all(
+  plans.map(async (plan) => {
+    const data = await stripe.plans.update(plan.id, {
+      'nickname': plan.nickname,
+      // 'interval': plan.interval,
+    });
+    return data;
+  })
+  );
+  
+  console.log(updatedPlans);
     return {
       statusCode: 200,
       headers: { ...CORS_HEADERS },

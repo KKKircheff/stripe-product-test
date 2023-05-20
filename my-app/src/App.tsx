@@ -55,6 +55,7 @@ function App() {
 
   const createProductInStripe = (product: Product, plans: Plan[]) => {
     const createProduct = async () => {
+
       try {
         const response = await fetch('/.netlify/functions/create-product', {
           method: "POST",
@@ -69,7 +70,6 @@ function App() {
       }
     };
     createProduct();
-    setIsProductChanged(!isProductChanged);
   }
 
   const updateProductInStripe = (product: Product, plans: Plan[]) => {
@@ -87,7 +87,7 @@ function App() {
       }
     };
     updateProduct();
-    setIsProductChanged(!isProductChanged);
+    resetProduct();
   }
 
   const deleteProduct = async (product: Product) => {

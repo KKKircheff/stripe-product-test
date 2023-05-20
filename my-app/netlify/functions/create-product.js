@@ -19,12 +19,15 @@ exports.handler = async (event) => {
       };
     }
 
-    const createdProduct = await stripe.products.create({ ...product });
-
+    const {id, ...dataProduct}=product;
+    const createdProduct = await stripe.products.create({ ...dataProduct });
+    
     const createdPlans = await Promise.all(
       plans.map(async (plan) => {
+        const {id, ...dataPlan}=plan;
+        console.log('inside---------------',plan);
         const data = await stripe.plans.create({
-          ...plan,
+          ...dataPlan,
           product: createdProduct.id,
         });
         return data;
